@@ -25,7 +25,7 @@ public class Main {
         int batchSize = 100;
         int totalFiles = files.length;
 
-        // Process in batches of 100
+        // Process the files in batches of 100
         for (int i = 0; i < totalFiles; i += batchSize) {
             int endIndex = Math.min(i + batchSize, totalFiles);
             File[] batch = java.util.Arrays.copyOfRange(files, i, endIndex);

@@ -9,6 +9,7 @@ public class FileLoader {
         File dir = new File(System.getProperty("user.dir") + File.separator + folderPath);
         File[] files = dir.listFiles((d, name) -> name.endsWith(".txt"));
 
+        // Instead of crash with NPE returns empty array.
         if (files == null) return new File[0];
 
         Arrays.sort(files, Comparator
