@@ -18,9 +18,15 @@ public class FileProcessor implements Callable<FileSummary> {
         int lines = 0, words = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
+            boolean hasContent = false;
             while ((line = br.readLine()) != null) {
+                hasContent = true;
                 lines++;
                 words += line.trim().isEmpty() ? 0 : line.split("\\s+").length;
+            }
+
+            if(!hasContent){
+                System.out.println("File "+ file.getName() + " is empty");
             }
         } catch (IOException e) {
             System.err.println("Error processing file: " + file.getName());

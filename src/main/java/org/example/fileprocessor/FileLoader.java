@@ -16,9 +16,6 @@ public class FileLoader {
                 .comparingLong(File::lastModified)
                 .thenComparing(File::getName));
 
-        if (files.length > 100) {
-            files = Arrays.copyOf(files, 100);
-        }
         return files;
     }
 }

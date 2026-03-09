@@ -23,6 +23,7 @@ public class Main {
 
         int batchSize = 100;
         int totalFiles = files.length;
+        List<FileSummary> allResults = new ArrayList<>();
 
         // Process the files in batches of 100
         for (int i = 0; i < totalFiles; i += batchSize) {
@@ -46,17 +47,16 @@ public class Main {
                 e.printStackTrace();
             }
 
-            List<FileSummary> results = new ArrayList<>();
             for (Future<FileSummary> future : futures) {
                 try {
-                    results.add(future.get());
+                    allResults.add(future.get());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
             // Print report for this batch
-            SummaryReport.printReport(results);
+            SummaryReport.printReport(allResults);
         }
 
         long end = System.currentTimeMillis();
