@@ -1,9 +1,6 @@
 package org.example;
 
-import org.example.fileprocessor.FileLoader;
-import org.example.fileprocessor.FileProcessor;
-import org.example.fileprocessor.FileSummary;
-import org.example.fileprocessor.SummaryReport;
+import org.example.fileprocessor.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -14,6 +11,8 @@ public class Main {
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
         System.out.println("Processing files using 4 threads...");
+
+        FileGenerator.generateFiles("files",300);
 
         // Load all files (sorted)
         File[] files = FileLoader.loadFiles("files");
