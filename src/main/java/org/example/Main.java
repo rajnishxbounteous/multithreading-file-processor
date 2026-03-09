@@ -15,39 +15,52 @@ public class Main {
         long start = System.currentTimeMillis();
         System.out.println("Processing files using 4 threads...");
 
+        // Load all files (sorted)
         File[] files = FileLoader.loadFiles("files");
         if (files.length == 0) {
             System.out.println("No text files found.");
             return;
         }
 
-        ExecutorService executor = Executors.newFixedThreadPool(4);
-        List<Future<FileSummary>> futures = new ArrayList<>();
+        int batchSize = 100;
+        int totalFiles = files.length;
 
-        for (File file : files) {
-            futures.add(executor.submit(new FileProcessor(file)));
-        }
+        // Process in batches of 100
+        for (int i = 0; i < totalFiles; i += batchSize) {
+            int endIndex = Math.min(i + batchSize, totalFiles);
+            File[] batch = java.util.Arrays.copyOfRange(files, i, endIndex);
 
-        executor.shutdown();
-        try {
-            executor.awaitTermination(1, TimeUnit.MINUTES);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+            System.out.println("\n--- Processing batch " + ((i / batchSize) + 1) +
+                    " (" + batch.length + " files) ---");
 
-        List<FileSummary> results = new ArrayList<>();
-        for (Future<FileSummary> future : futures) {
+            ExecutorService executor = Executors.newFixedThreadPool(4);
+            List<Future<FileSummary>> futures = new ArrayList<>();
+
+            for (File file : batch) {
+                futures.add(executor.submit(new FileProcessor(file)));
+            }
+
+            executor.shutdown();
             try {
-                results.add(future.get());
-            } catch (Exception e) {
+                executor.awaitTermination(1, TimeUnit.MINUTES);
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            List<FileSummary> results = new ArrayList<>();
+            for (Future<FileSummary> future : futures) {
+                try {
+                    results.add(future.get());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Print report for this batch
+            SummaryReport.printReport(results);
         }
 
-        // Call SummaryReport to print final summary
-        SummaryReport.printReport(results);
-
         long end = System.currentTimeMillis();
-        System.out.println("Execution time: " + (end - start) + " ms");
+        System.out.println("\nTotal Execution time: " + (end - start) + " ms");
     }
 }
