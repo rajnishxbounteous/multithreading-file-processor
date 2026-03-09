@@ -3,6 +3,7 @@ package org.example;
 import org.example.fileprocessor.FileLoader;
 import org.example.fileprocessor.FileProcessor;
 import org.example.fileprocessor.FileSummary;
+import org.example.fileprocessor.SummaryReport;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -43,16 +44,10 @@ public class Main {
             }
         }
 
-        // For now, just print results directly
-        for (FileSummary stats : results) {
-            System.out.println("File: " + stats.getFileName());
-            System.out.println("Lines: " + stats.getLines());
-            System.out.println("Words: " + stats.getWords());
-            System.out.println();
-        }
+        // Call SummaryReport to print final summary
+        SummaryReport.printReport(results);
 
         long end = System.currentTimeMillis();
         System.out.println("Execution time: " + (end - start) + " ms");
     }
-
 }
